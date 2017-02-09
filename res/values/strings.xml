@@ -435,4 +435,8 @@
     <string name="old_data_icon">Old style data icon</string>
     <string name="old_data_icon_summary">Change takes effect on next update of mobile signal icon.</string>
 
+    <!-- Running Services button -->
+    <string name="qs_running_services_title">Running Services Icon</string>
+    <string name="qs_running_services_summary">Enable the running services icon in the footer</string>
+
 </resources>
