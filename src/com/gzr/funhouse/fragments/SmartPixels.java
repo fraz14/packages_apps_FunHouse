@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2016 The Dirty Unicorns Project
+ * Copyright (C) 2018 CarbonROM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,49 +14,48 @@
  * limitations under the License.
  */
 
-package com.gzr.funhouse.tabs;
+package com.gzr.funhouse.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContentResolver;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.UserHandle;
-import android.provider.Settings;
+import android.os.PowerManager;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragment;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.Preference.OnPreferenceChangeListener;
-import androidx.preference.PreferenceFragment;
-import androidx.preference.SwitchPreference;
+import android.provider.Settings;
 
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
+
+import com.gzr.funhouse.preference.SystemSettingSwitchPreference;
 import com.android.internal.logging.nano.MetricsProto;
-import com.android.settings.Utils;
 
-import com.android.settings.search.BaseSearchIndexProvider;
-import com.android.settings.search.Indexable;
+public class SmartPixels extends SettingsPreferenceFragment implements
+        Preference.OnPreferenceChangeListener {
+    private static final String TAG = "SmartPixels";
 
-public class System extends SettingsPreferenceFragment implements
-        Preference.OnPreferenceChangeListener, Indexable {
+    private static final String ON_POWER_SAVE = "smart_pixels_on_power_save";
 
-    private static final String TAG = "System";
+    private SystemSettingSwitchPreference mSmartPixelsOnPowerSave;
+
+    ContentResolver resolver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        addPreferencesFromResource(R.xml.system);
-
-        ContentResolver resolver = getActivity().getContentResolver();
-
-        boolean enableSmartPixels = getContext().getResources().
-                getBoolean(com.android.internal.R.bool.config_enableSmartPixels);
-        Preference SmartPixels = findPreference("smart_pixels");
-        if (!enableSmartPixels){
-            getPreferenceScreen().removePreference(SmartPixels);
-        }
+        addPreferencesFromResource(R.xml.smart_pixels);
+        resolver = getActivity().getContentResolver();
+        mSmartPixelsOnPowerSave = (SystemSettingSwitchPreference) findPreference(ON_POWER_SAVE);
+        updateDependency();
     }
 
     @Override
@@ -76,6 +75,19 @@ public class System extends SettingsPreferenceFragment implements
 
     public boolean onPreferenceChange(Preference preference, Object objValue) {
         final String key = preference.getKey();
-        return false;
+        updateDependency();
+        return true;
+    }
+
+    private void updateDependency() {
+        boolean mUseOnPowerSave = (Settings.System.getIntForUser(
+                resolver, Settings.System.SMART_PIXELS_ON_POWER_SAVE,
+                0, UserHandle.USER_CURRENT) == 1);
+        PowerManager pm = (PowerManager)getActivity().getSystemService(Context.POWER_SERVICE);
+        if (pm.isPowerSaveMode() && mUseOnPowerSave) {
+            mSmartPixelsOnPowerSave.setEnabled(false);
+        } else {
+            mSmartPixelsOnPowerSave.setEnabled(true);
+        }
     }
 }
