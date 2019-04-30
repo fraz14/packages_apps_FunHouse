@@ -59,6 +59,12 @@
             android:summary="@string/smart_pixels_summary"
             android:fragment="com.gzr.funhouse.fragments.SmartPixels" />
 
+    <Preference
+            android:key="aggressive_battery"
+            android:title="@string/aggressive_battery_title"
+            android:summary="@string/aggressive_battery_summary"
+            android:fragment="com.gzr.funhouse.fragments.AggressiveBattery" />
+
     <com.gzr.funhouse.preference.SystemSettingListPreference
         android:key="toast_animation"
         android:title="@string/toast_animation_title"
