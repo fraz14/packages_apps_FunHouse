@@ -429,4 +429,8 @@
     <string name="qs_blur_alpha_title">Blur alpha</string>
     <string name="qs_blur_alpha_summary">Sets the blur transparency</string>
 
+    <!-- Old data icons -->
+    <string name="old_data_icon">Old style data icon</string>
+    <string name="old_data_icon_summary">Change takes effect on next update of mobile signal icon.</string>
+
 </resources>

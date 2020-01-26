@@ -56,6 +56,12 @@
         android:title="@string/lte_switch_title" />
 
     <com.gzr.funhouse.preference.SystemSettingSwitchPreference
+        android:key="use_old_mobiletype"
+        android:title="@string/old_data_icon"
+        android:summary="@string/old_data_icon_summary"
+        android:defaultValue="false" />
+
+    <com.gzr.funhouse.preference.SystemSettingSwitchPreference
         android:key="double_tap_sleep_gesture"
         android:title="@string/double_tap_sleep_gesture_title"
         android:defaultValue="true" />
