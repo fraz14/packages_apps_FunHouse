@@ -440,6 +440,7 @@
     <string name="qs_running_services_summary">Enable the running services icon in the footer</string>
 
     <!-- Lockscreen clock style -->
+    <string name="clock_title">Lockscreen clock</string>
     <string name="lockscreen_clock_title">Clock style</string>
     <string name="lockscreen_clock_dialog_title">Select clock style</string>
     <string name="lockscreen_clock_hide">Hide</string>

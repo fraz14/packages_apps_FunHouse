@@ -35,6 +35,11 @@
         android:summary="@string/visualizer_summary"
         android:fragment="com.gzr.funhouse.fragments.Visualizer" />
 
+    <Preference
+        android:key="lockscreen_clock"
+        android:title="@string/clock_title"
+        android:fragment="com.gzr.funhouse.fragments.LockScreenClock" />
+
     <com.gzr.funhouse.preference.SystemSettingSwitchPreference
         android:key="double_tap_sleep_lockscreen"
         android:title="@string/double_tap_sleep_lockscreen"
@@ -58,21 +63,5 @@
         android:title="@string/hide_lockicon_title"
         android:summary="@string/hide_lockicon_summary"
         android:defaultValue="false" />
-
-    <com.gzr.funhouse.preference.SecureSettingListPreference
-        android:key="lockscreen_clock_selection"
-        android:title="@string/lockscreen_clock_title"
-        android:dialogTitle="@string/lockscreen_clock_dialog_title"
-        android:entries="@array/lockscreen_clock_titles"
-        android:entryValues="@array/lockscreen_clock_values"
-        android:defaultValue="2" />
-
-    <com.gzr.funhouse.preference.SecureSettingListPreference
-        android:key="lockscreen_date_selection"
-        android:title="@string/lockscreen_date_selection_title"
-        android:dialogTitle="@string/lockscreen_date_dialog_title"
-        android:entries="@array/lockscreen_date_selection_entries"
-        android:entryValues="@array/lockscreen_date_selection_values"
-        android:defaultValue="0" />
 
 </PreferenceScreen>
