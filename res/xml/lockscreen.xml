@@ -23,6 +23,11 @@
         android:title="@string/lockscreen_media_blur" />
 
     <Preference
+        android:key="lockscreen_pulse_noti"
+        android:fragment="com.gzr.funhouse.fragments.PulseSettings"
+        android:title="@string/pulse_ambient_light_title" />
+	
+    <Preference
             android:title="@string/lockscreen_tuner_title" >
             <intent android:action="android.intent.action.MAIN"
                 android:targetPackage="com.android.systemui"
