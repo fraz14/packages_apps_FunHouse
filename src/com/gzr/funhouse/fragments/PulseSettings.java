@@ -36,6 +36,7 @@ import com.android.settings.SettingsPreferenceFragment;
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.settings.Utils;
 
+import com.gzr.funhouse.preference.SystemSettingSwitchPreference;
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
 public class PulseSettings extends SettingsPreferenceFragment implements
@@ -44,6 +45,10 @@ public class PulseSettings extends SettingsPreferenceFragment implements
     private ColorPickerPreference mPulseLightColor;
     private int mDefaultColor;
     private ListPreference mPulseTimeout;
+    private SwitchPreference mPulseAmbientLight;
+    private SwitchPreference mAmbientLightEnabled;
+    private SwitchPreference mAmbientLightHide;
+    private SwitchPreference mAmbientLightAccent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,30 @@ public class PulseSettings extends SettingsPreferenceFragment implements
 				            UserHandle.USER_CURRENT);
         mPulseTimeout.setValue(String.valueOf(pulseTimeout));
         mPulseTimeout.setSummary(mPulseTimeout.getEntry());
+		
+        mPulseAmbientLight = (SwitchPreference) findPreference("pulse_ambient_light");
+        mPulseAmbientLight.setChecked((Settings.System.getInt(
+                getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.OMNI_NOTIFICATION_PULSE, 0) == 1));
+        mPulseAmbientLight.setOnPreferenceChangeListener(this);
+
+        mAmbientLightEnabled = (SwitchPreference) findPreference("ambient_notification_light_enabled");
+        mAmbientLightEnabled.setChecked((Settings.System.getInt(
+                getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.OMNI_AOD_NOTIFICATION_PULSE, 0) == 1));
+        mAmbientLightEnabled.setOnPreferenceChangeListener(this);
+
+        mAmbientLightHide = (SwitchPreference) findPreference("ambient_notification_light_hide_aod");
+        mAmbientLightHide.setChecked((Settings.System.getInt(
+                getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.OMNI_AOD_NOTIFICATION_PULSE_CLEAR, 0) == 1));
+        mAmbientLightHide.setOnPreferenceChangeListener(this);
+		
+        mAmbientLightAccent = (SwitchPreference) findPreference("ambient_notification_light_accent");
+        mAmbientLightAccent.setChecked((Settings.System.getInt(
+                getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.OMNI_NOTIFICATION_PULSE_ACCENT, 0) == 1));
+        mAmbientLightAccent.setOnPreferenceChangeListener(this);
         }
 
     @Override
@@ -89,6 +118,26 @@ public class PulseSettings extends SettingsPreferenceFragment implements
             int index = mPulseTimeout.findIndexOfValue((String) newValue);
             mPulseTimeout.setSummary(
                     mPulseTimeout.getEntries()[index]);
+            return true;
+        } else if (preference == mPulseAmbientLight) {
+            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.OMNI_NOTIFICATION_PULSE,
+                    (Boolean) newValue ? 1 : 0);
+            return true;
+        } else if (preference == mAmbientLightEnabled) {
+            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.OMNI_AOD_NOTIFICATION_PULSE,
+                    (Boolean) newValue ? 1 : 0);
+            return true;
+        } else if (preference == mAmbientLightHide) {
+            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.OMNI_AOD_NOTIFICATION_PULSE_CLEAR,
+                    (Boolean) newValue ? 1 : 0);
+            return true;
+        } else if (preference == mAmbientLightAccent) {
+            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.OMNI_NOTIFICATION_PULSE_ACCENT,
+                    (Boolean) newValue ? 1 : 0);
             return true;
         }
         return false;
