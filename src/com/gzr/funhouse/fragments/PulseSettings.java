@@ -43,6 +43,7 @@ public class PulseSettings extends SettingsPreferenceFragment implements
 
     private ColorPickerPreference mPulseLightColor;
     private int mDefaultColor;
+    private ListPreference mPulseTimeout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,14 @@ public class PulseSettings extends SettingsPreferenceFragment implements
         mPulseLightColor.setAlphaSliderEnabled(true);
         mPulseLightColor.setNewPreviewColor(color);
         mPulseLightColor.setOnPreferenceChangeListener(this);
+		
+        mPulseTimeout = (ListPreference) findPreference("ambient_notification_light_timeout");
+        mPulseTimeout.setOnPreferenceChangeListener(this);
+        int pulseTimeout = Settings.System.getIntForUser(getContentResolver(),
+                Settings.System.OMNI_AOD_NOTIFICATION_PULSE_TIMEOUT, 0,
+				            UserHandle.USER_CURRENT);
+        mPulseTimeout.setValue(String.valueOf(pulseTimeout));
+        mPulseTimeout.setSummary(mPulseTimeout.getEntry());
         }
 
     @Override
@@ -72,7 +81,16 @@ public class PulseSettings extends SettingsPreferenceFragment implements
                     Settings.System.OMNI_NOTIFICATION_PULSE_COLOR, color,
                     UserHandle.USER_CURRENT);
             return true;
-        } 
+        } else if (preference.equals(mPulseTimeout)) {
+            int pulseTimeout = Integer.parseInt(((String) newValue).toString());
+            Settings.System.putIntForUser(getContentResolver(),
+                    Settings.System.OMNI_AOD_NOTIFICATION_PULSE_TIMEOUT, pulseTimeout, 
+					UserHandle.USER_CURRENT);
+            int index = mPulseTimeout.findIndexOfValue((String) newValue);
+            mPulseTimeout.setSummary(
+                    mPulseTimeout.getEntries()[index]);
+            return true;
+        }
         return false;
     }
 }

@@ -468,17 +468,26 @@
     <string name="lockscreen_date_selection_str_border_gradient">Dark with gradient borders</string>
 
     <!-- Pulse notifications -->
+    <string name="pulse_light_title">Pulse notification</string>
     <string name="pulse_ambient_light_title">Show on new notifcation</string>
     <string name="pulse_ambient_light_summary">Show light pulse on new notification</string>
     <string name="ambient_notification_light_enabled_title">Show on always on</string>
-    <string name="ambient_notification_light_enabled_summary">Show light pulse on new notification using always on</string>
+    <string name="ambient_notification_light_enabled_summary">Show light pulse on new notification pulse always on</string>
     <string name="pulse_ambient_light_note">Wake screen on receiving new notifications must be turned on</string>
     <string name="ambient_brigthness_category_title">Screen brightness</string>
-    <string name="pulse_ambient_category_title">Notification light pulse</string>
+    <string name="pulse_ambient_category_title">Notification pulse</string>
     <string name="ambient_notification_light_hide_aod_title">Only show light pulse</string>
     <string name="ambient_notification_light_hide_aod_summary">Hide all other display elements from always on</string>
     <string name="ambient_notification_light_accent_title">Use system accent color</string>
     <string name="ambient_notification_light_accent_summary">Use current system accent color for light pulse</string>
     <string name="ambient_notification_light_color_title">Use custom color</string>
     <string name="ambient_notification_light_color_summary">Use a custom color for light pulse</string>
+    <string name="ambient_notification_light_timeout_title">Timeout for light pulse</string>
+    <string name="entry_infinite">Infinite</string>
+    <string name="entry_five_minute">5 minutes</string>
+    <string name="entry_ten_minute">10 minutes</string>
+    <string name="entry_thirty_minute">30 minutes</string>
+    <string name="entry_sixty_minute">60 minutes</string>
+    <string name="entry_fifteen_minute">15 minutes</string>
+    
 </resources>
