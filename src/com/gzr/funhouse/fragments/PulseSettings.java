@@ -25,6 +25,7 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.Preference.OnPreferenceChangeListener;
@@ -35,28 +36,43 @@ import com.android.settings.SettingsPreferenceFragment;
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.settings.Utils;
 
+import net.margaritov.preference.colorpicker.ColorPickerPreference;
+
 public class PulseSettings extends SettingsPreferenceFragment implements
         Preference.OnPreferenceChangeListener {
+
+    private ColorPickerPreference mPulseLightColor;
+    private int mDefaultColor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         addPreferencesFromResource(R.xml.pulse);
-    }
+
+        mDefaultColor = getResources().getInteger(
+                com.android.internal.R.integer.config_ambientNotificationDefaultColor);
+        int color = Settings.System.getIntForUser(getContentResolver(),
+                Settings.System.OMNI_NOTIFICATION_PULSE_COLOR, mDefaultColor,
+                            UserHandle.USER_CURRENT);
+        mPulseLightColor = (ColorPickerPreference) findPreference("ambient_notification_light_color");
+        mPulseLightColor.setAlphaSliderEnabled(true);
+        mPulseLightColor.setNewPreviewColor(color);
+        mPulseLightColor.setOnPreferenceChangeListener(this);
+        }
 
     @Override
     public int getMetricsCategory() {
         return MetricsProto.MetricsEvent.VALIDUS;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        if (preference.equals(mPulseLightColor)) {
+            int color = ((Integer) newValue).intValue();
+            Settings.System.putIntForUser(getContentResolver(),
+                    Settings.System.OMNI_NOTIFICATION_PULSE_COLOR, color,
+                    UserHandle.USER_CURRENT);
+            return true;
+        } 
+        return false;
     }
-
-    public boolean onPreferenceChange(Preference preference, Object objValue) {
-        return true;
-    }
-
 }

@@ -45,6 +45,13 @@
         android:summary="@string/ambient_notification_light_accent_summary"
         android:defaultValue="false"
         android:disableDependentsState="true" />
+	
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+        android:key="ambient_notification_light_color"
+        android:title="@string/ambient_notification_light_color_title"
+        android:summary="@string/ambient_notification_light_color_summary"
+        android:persistent="false"
+        android:dependency="ambient_notification_light_accent" />
 
     <Preference
         android:icon="@drawable/ic_info_outline_24dp"
