@@ -489,6 +489,10 @@
     <string name="entry_thirty_minute">30 minutes</string>
     <string name="entry_sixty_minute">60 minutes</string>
     <string name="entry_fifteen_minute">15 minutes</string>
+    <string name="ambient_pulse_brightness_title">Ambient notification brightness</string>
+    <string name="ambient_pulse_brightness_summary">Set brightness to use when notifcations are shown</string>
+    <string name="ambient_doze_brightness_title">Ambient display brightness</string>
+    <string name="ambient_doze_brightness_summary">Set brightness to use during ambient display on</string>
     
     <!-- Ls Weather -->
     <string name="weather_title">Weather</string>

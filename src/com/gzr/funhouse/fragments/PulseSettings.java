@@ -36,6 +36,7 @@ import com.android.settings.SettingsPreferenceFragment;
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.settings.Utils;
 
+import com.gzr.funhouse.preference.CustomSeekBarPreference;
 import com.gzr.funhouse.preference.SystemSettingSwitchPreference;
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
@@ -45,6 +46,8 @@ public class PulseSettings extends SettingsPreferenceFragment implements
     private ColorPickerPreference mPulseLightColor;
     private int mDefaultColor;
     private ListPreference mPulseTimeout;
+    private CustomSeekBarPreference mPulseBrightness;
+    private CustomSeekBarPreference mDozeBrightness;
     private SwitchPreference mPulseAmbientLight;
     private SwitchPreference mAmbientLightEnabled;
     private SwitchPreference mAmbientLightHide;
@@ -55,6 +58,26 @@ public class PulseSettings extends SettingsPreferenceFragment implements
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pulse);
 
+        int defaultDoze = getResources().getInteger(
+                com.android.internal.R.integer.config_screenBrightnessDoze);
+        int defaultPulse = getResources().getInteger(
+                com.android.internal.R.integer.config_screenBrightnessPulse);
+        if (defaultPulse == -1) {
+            defaultPulse = defaultDoze;
+        }
+
+        mPulseBrightness = (CustomSeekBarPreference) findPreference("ambient_pulse_brightness");
+        int value = Settings.System.getInt(getContentResolver(),
+                Settings.System.OMNI_PULSE_BRIGHTNESS, defaultPulse);
+        mPulseBrightness.setValue(value);
+        mPulseBrightness.setOnPreferenceChangeListener(this);
+
+        mDozeBrightness = (CustomSeekBarPreference) findPreference("ambient_doze_brightness");
+        value = Settings.System.getInt(getContentResolver(),
+                Settings.System.OMNI_DOZE_BRIGHTNESS, defaultDoze);
+        mDozeBrightness.setValue(value);
+        mDozeBrightness.setOnPreferenceChangeListener(this);
+		
         mDefaultColor = getResources().getInteger(
                 com.android.internal.R.integer.config_ambientNotificationDefaultColor);
         int color = Settings.System.getIntForUser(getContentResolver(),
@@ -104,7 +127,17 @@ public class PulseSettings extends SettingsPreferenceFragment implements
     }
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference.equals(mPulseLightColor)) {
+        if (preference == mPulseBrightness) {
+            int value = (Integer) newValue;
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.OMNI_PULSE_BRIGHTNESS, value);
+            return true;
+        } else if (preference == mDozeBrightness) {
+            int value = (Integer) newValue;
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.OMNI_DOZE_BRIGHTNESS, value);
+            return true;
+        } else if (preference.equals(mPulseLightColor)) {
             int color = ((Integer) newValue).intValue();
             Settings.System.putIntForUser(getContentResolver(),
                     Settings.System.OMNI_NOTIFICATION_PULSE_COLOR, color,
