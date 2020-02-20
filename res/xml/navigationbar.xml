@@ -35,4 +35,10 @@
         android:summary="@string/pixel_navbar_anim_summary"
         android:defaultValue="true" />
 
+    <com.gzr.funhouse.preference.SystemSettingSwitchPreference
+        android:key="navigation_bar_menu_arrow_keys"
+        android:title="@string/navigation_bar_arrow_keys_title"
+        android:summary="@string/navigation_bar_arrow_keys_summary"
+        android:defaultValue="false" />
+
 </PreferenceScreen>
