@@ -25,7 +25,6 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import androidx.preference.ListPreference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.Preference.OnPreferenceChangeListener;
@@ -46,12 +45,12 @@ public class PulseSettings extends SettingsPreferenceFragment implements
     private ColorPickerPreference mPulseLightColor;
     private int mDefaultColor;
     private ListPreference mPulseTimeout;
+    private ListPreference mColorMode;
     private CustomSeekBarPreference mPulseBrightness;
     private CustomSeekBarPreference mDozeBrightness;
     private SwitchPreference mPulseAmbientLight;
     private SwitchPreference mAmbientLightEnabled;
     private SwitchPreference mAmbientLightHide;
-    private SwitchPreference mAmbientLightAccent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +94,23 @@ public class PulseSettings extends SettingsPreferenceFragment implements
 				            UserHandle.USER_CURRENT);
         mPulseTimeout.setValue(String.valueOf(pulseTimeout));
         mPulseTimeout.setSummary(mPulseTimeout.getEntry());
+
+        mColorMode = (ListPreference) findPreference("ambient_notification_light_color_mode");
+        boolean colorModeAutomatic = Settings.System.getInt(getContentResolver(),
+                Settings.System.OMNI_NOTIFICATION_PULSE_COLOR_AUTOMATIC, 0) != 0;
+        boolean colorModeAccent = Settings.System.getInt(getContentResolver(),
+                Settings.System.OMNI_NOTIFICATION_PULSE_ACCENT, 0) != 0;
+        if (colorModeAutomatic) {
+            value = 0;
+        } else if (colorModeAccent) {
+            value = 1;
+        } else {
+            value = 2;
+        }
+
+        mColorMode.setValue(Integer.toString(value));
+        mColorMode.setSummary(mColorMode.getEntry());
+        mColorMode.setOnPreferenceChangeListener(this);
 		
         mPulseAmbientLight = (SwitchPreference) findPreference("pulse_ambient_light");
         mPulseAmbientLight.setChecked((Settings.System.getInt(
@@ -114,11 +130,6 @@ public class PulseSettings extends SettingsPreferenceFragment implements
                 Settings.System.OMNI_AOD_NOTIFICATION_PULSE_CLEAR, 0) == 1));
         mAmbientLightHide.setOnPreferenceChangeListener(this);
 		
-        mAmbientLightAccent = (SwitchPreference) findPreference("ambient_notification_light_accent");
-        mAmbientLightAccent.setChecked((Settings.System.getInt(
-                getActivity().getApplicationContext().getContentResolver(),
-                Settings.System.OMNI_NOTIFICATION_PULSE_ACCENT, 0) == 1));
-        mAmbientLightAccent.setOnPreferenceChangeListener(this);
         }
 
     @Override
@@ -152,6 +163,27 @@ public class PulseSettings extends SettingsPreferenceFragment implements
             mPulseTimeout.setSummary(
                     mPulseTimeout.getEntries()[index]);
             return true;
+        } else if (preference == mColorMode) {
+            int value = Integer.valueOf((String) newValue);
+            int index = mColorMode.findIndexOfValue((String) newValue);
+            mColorMode.setSummary(mColorMode.getEntries()[index]);
+            if (value == 0) {
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.OMNI_NOTIFICATION_PULSE_COLOR_AUTOMATIC, 1);
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.OMNI_NOTIFICATION_PULSE_ACCENT, 0);
+            } else if (value == 1) {
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.OMNI_NOTIFICATION_PULSE_COLOR_AUTOMATIC, 0);
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.OMNI_NOTIFICATION_PULSE_ACCENT, 1);
+            } else {
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.OMNI_NOTIFICATION_PULSE_COLOR_AUTOMATIC, 0);
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.OMNI_NOTIFICATION_PULSE_ACCENT, 0);
+            }
+            return true;
         } else if (preference == mPulseAmbientLight) {
             Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
                     Settings.System.OMNI_NOTIFICATION_PULSE,
@@ -165,11 +197,6 @@ public class PulseSettings extends SettingsPreferenceFragment implements
         } else if (preference == mAmbientLightHide) {
             Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
                     Settings.System.OMNI_AOD_NOTIFICATION_PULSE_CLEAR,
-                    (Boolean) newValue ? 1 : 0);
-            return true;
-        } else if (preference == mAmbientLightAccent) {
-            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
-                    Settings.System.OMNI_NOTIFICATION_PULSE_ACCENT,
                     (Boolean) newValue ? 1 : 0);
             return true;
         }
